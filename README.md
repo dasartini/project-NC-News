@@ -7,11 +7,17 @@ To correctly connect to the provided database and run this project, it is requir
 3- npm install dependencies.
 4- run npm setup.
 5 -run npm seed.
-6- You are know succesfully connected to the database
+6- You are now succesfully connected to the database.
+7- To run the tests just type run rpm test int.
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Branch: 2-get-topics
--Adding an endpoing /api/topics that gets all the topics.
+-Adding /api/topics endpoint that gets all the topics.
 -Responds with an array of topic objects.
 -Adding testing suite.
+
+Branch: 3-api
+-Adding /api endpoint
+-Responds with all the aviable endpoints in the project
+

@@ -9,4 +9,5 @@ SELECT * FROM topics`).then(({rows})=>{
 
 };
 
+
 module.exports = findTopics
