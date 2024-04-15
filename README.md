@@ -21,3 +21,6 @@ Branch: 3-api
 -Adding /api endpoint
 -Responds with all the aviable endpoints in the project
 
+Branch: 4-api-get-articles-article_id
+-Adding /api/articles/:article_id
+-Responds with the correct article given an id number

@@ -1,19 +1,30 @@
-//my callbackfunctions from models
-const findTopics = require('./models')
-const endpoint =require('../endpoints.json')
+const { findTopics, fetchArticleId } = require('./models')
+const endpoint = require('../endpoints.json')
 
 
 const getTopics = function (req, res, next) {
     return findTopics().then((topics) => {
-        //console.log({topics}, "aaaaaaaaaaaaat controls")
         res.status(200).send({ topics })
 
     })
 };
 
-const beOnApi = function(req, res, next){
-    console.log(endpoint)
-    return res.status(200).send({endpoint})  
-}
+const getApiEndPoints = function (req, res, next) {
+    return res.status(200).send({ endpoint })
+};
 
-module.exports = {getTopics, beOnApi}
+const getArticleById = function (req, res, next) {
+    const { article_id } = req.params
+   //console.log(article_id)
+    return fetchArticleId(article_id).then((article) => {
+        console.log({ article })
+        res.status(200).send({ article })
+
+    })
+    .catch((err)=>{
+        console.log(err)
+        next(err)
+    })
+};
+
+module.exports = { getTopics, getApiEndPoints, getArticleById }
