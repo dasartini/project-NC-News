@@ -25,5 +25,8 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id":{
+    "description": "Take any existing article Id number and returns it with is own characteristics and values"
   }
 }
