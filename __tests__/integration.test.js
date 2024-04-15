@@ -10,7 +10,7 @@ afterAll(() => db.end());
 describe("General not found error",()=>{
     test('GET ERROR: returns 404 error if there is an invalid point entered.',()=>{
         return request(app)
-        .get("/api/notAnyValidEndpoint")
+        .get("/notAnyValidEndpoint")
         .expect(404)
         .then(({body})=>{
             const {message} = body;
@@ -51,5 +51,18 @@ describe("/api/topics", () => {
             expect(message).toBe("Error 404! endpoint not found :(")
         });
     });
+
+})
+
+describe('Being on api',()=>{
+    test("Responds with an object describing all the aviable endpoints in this API",()=>{
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({body})=>{
+            const {endpoint} = body
+            expect(typeof endpoint).toBe("object")
+        })
+    })
 
 })
