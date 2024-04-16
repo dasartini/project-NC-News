@@ -6,12 +6,22 @@
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        {
+          "slug": "football",
+          "description": "Footie!"
+        }
+      ]
     }
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -26,7 +36,24 @@
       ]
     }
   },
-  "GET /api/articles/:article_id":{
-    "description": "Take any existing article Id number and returns it with is own characteristics and values"
+  "GET /api/articles/:article_id": {
+    "description": "Take any existing article Id number and returns it with is own characteristics and values",
+    "queries": [
+      "author",
+      "topic",
+      "sort_by",
+      "order",
+      "comment_count"
+    ],
+    "exampleResponse": {
+      "article_id": 9,
+      "title": "They're not exactly dogs, are they?",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "created_at": "2020-06-06T09:10:00.000Z",
+      "votes": 0,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      "comment_count": 2
+    }
   }
 }
