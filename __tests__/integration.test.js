@@ -77,6 +77,7 @@ describe("/api/articles", () => {
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body
+                expect(articles[0].created_at).toBe('2020-11-03T09:12:00.000Z')
                 expect(articles.length).toBe(13)
                 articles.forEach((article) => {
                     expect(typeof article.comment_count).toBe('number')
@@ -93,7 +94,7 @@ describe("/api/articles", () => {
     })
 
 
-})
+});
 
 test("GET:/api/articles/article:id returns the specified article", () => {
     return request(app)
@@ -112,7 +113,7 @@ test("GET:/api/articles/article:id returns the specified article", () => {
             expect(article.hasOwnProperty('votes')).toBe(true)
         })
 
-})
+});
 
 test("GET: Returns an error message when provided a valid but non-existing article id", () => {
     return request(app)
@@ -122,7 +123,7 @@ test("GET: Returns an error message when provided a valid but non-existing artic
             const { message } = body;
             expect(message).toBe("Bad request :(")
         })
-})
+});
 
 test("GET: Returns an error message when provided an higher id number", () => {
     return request(app)
@@ -132,7 +133,7 @@ test("GET: Returns an error message when provided an higher id number", () => {
             const { message } = body;
             expect(message).toBe("The id provided does not exist!")
         })
-})
+});
 
 
 describe('/api/articles/:article_id/comments', () => {
@@ -143,6 +144,7 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { comments } = body
                 expect(comments.length).toBe(2)
+                expect(comments[0].created_at).toBe("2020-04-06T12:17:00.000Z")
                 comments.forEach((comment) => {
                     expect(typeof comment).toBe('object')
                     expect(typeof comment.comment_id).toBe('number')
