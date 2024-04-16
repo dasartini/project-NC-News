@@ -157,6 +157,23 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 
+    test.only("POST:/api/articles/:article_id/comments",()=>{
+        return request(app)
+        .post('/api/articles/2/comments')
+        .send({
+            username : "rogersop",
+            body : "I love Poland"
+        })
+        .expect(201)
+        .then(({body})=>{
+        
+        console.log(body)
+       
+        })
+
+
+    })
+
     test("GET:/api/articles/2/comments Returns an empty array when passed an comment id without comments", () => {
         return request(app)
             .get('/api/articles/2/comments')
@@ -186,5 +203,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(message).toBe("Bad request :(")
             })
     })
+
+    
 
 });

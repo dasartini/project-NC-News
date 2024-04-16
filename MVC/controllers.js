@@ -1,5 +1,5 @@
 const { findTopics, fetchArticleId, fetchArticles,
-    fetchCommentsByArtId, checkIfArticleExist } = require('./models')
+    fetchCommentsByArtId, checkIfArticleExist, postAComment } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -52,4 +52,15 @@ const getCommentsByArticleId = function (req, res, next) {
 
 }
 
-module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId }
+const postCommentById = function (req, res, next){
+   const {article_id} = req.params
+   const {body} = req
+    return postAComment(article_id, body).then((result)=>{
+        const newComment = result[0]
+        res.status(201).send({newComment})
+        
+    })
+
+}
+
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId , postCommentById}
