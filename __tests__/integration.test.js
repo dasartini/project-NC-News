@@ -71,6 +71,30 @@ describe('GET:/api', () => {
 });
 
 describe("/api/articles", () => {
+    test("GET:/api/articles returns an array containing all the articles",()=>{
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body})=>{
+            const {articles} = body
+            expect(articles.length).toBe(13)
+            articles.forEach((article) => {
+                expect(typeof article.comment_count).toBe('number')
+                expect(typeof article.article_id).toBe('number')
+                expect(typeof article.title).toBe('string')
+                expect(typeof article.topic).toBe('string')
+                expect(typeof article.author).toBe('string')
+                expect(typeof article.body).toBe('undefined')
+                expect(typeof article.created_at).toBe('string')
+                expect(typeof article.votes).toBe('number')
+                expect(typeof article.article_img_url).toBe("string")
+            });
+        });
+        })
+        
+
+    })
+
     test("GET:/api/articles/article:id returns the specified article", () => {
         return request(app)
             .get('/api/articles/6')
@@ -90,7 +114,7 @@ describe("/api/articles", () => {
 
     })
 
-    test("GET: Returns an error message when provided an invalid article id",()=>{
+    test("GET: Returns an error message when provided a valid but non-existing article id",()=>{
         return request(app)
         .get('/api/articles/papa_pear')
         .expect(400)
@@ -100,14 +124,12 @@ describe("/api/articles", () => {
         })
     })
 
-    test.only("GET: Returns an error message when provided an higher id number",()=>{
+    test("GET: Returns an error message when provided an higher id number",()=>{
         return request(app)
         .get('/api/articles/99999999')
-        .expect(400)
+        .expect(404)
         .then(({ body }) => {
             const { message } = body;
             expect(message).toBe("The id provided does not exist!")
         })
     })
-
-});

@@ -1,4 +1,4 @@
-const { findTopics, fetchArticleId } = require('./models')
+const { findTopics, fetchArticleId, fetchArticles } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -10,21 +10,29 @@ const getTopics = function (req, res, next) {
 };
 
 const getApiEndPoints = function (req, res, next) {
+
     return res.status(200).send({ endpoint })
 };
 
 const getArticleById = function (req, res, next) {
     const { article_id } = req.params
-   //console.log(article_id)
     return fetchArticleId(article_id).then((article) => {
-        console.log({ article })
         res.status(200).send({ article })
 
     })
     .catch((err)=>{
-        console.log(err)
         next(err)
     })
 };
 
-module.exports = { getTopics, getApiEndPoints, getArticleById }
+const getAllArticles = function (req, res ,next){
+    return fetchArticles().then((articles)=>{
+        articles.forEach((article)=>{
+            delete article.body
+        })
+        res.status(200).send({articles})
+
+    })
+}
+
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles }
