@@ -289,7 +289,7 @@ describe('/api/articles/:article_id/comments', () => {
             })
     })
 
-    test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing Id", () => {
+    test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing username", () => {
         return request(app)
             .post('/api/articles/2/comments')
             .send({
@@ -302,7 +302,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(message).toBe("The username attempting to post does not exist!")
             })
     })
-    test("POST:/api/articles/NotValidEndpoint/comments Returns an empty array when passed an comment id without comments", () => {
+    test("POST:/api/articles/NotValidEndpoint/comments Returns an error message when passed a comment using an invalid article ID", () => {
         return request(app)
             .post('/api/articles/GarethBale/comments')
             .send({
@@ -346,6 +346,32 @@ describe('/api/articles/:article_id/comments', () => {
             })
     })
 
+    describe('/api/comments/:comment_id', () => {
 
+        test('DELETE:/api/comments/:comment_id Deletes the given comment by ID.', () => {
+            return request(app)
+                .delete('/api/comments/5')
+                .expect(204)
+        })
+        test('ERROR DELETE:/api/comments/99999 Returns an error when passed an invalid ID.', () => {
+            return request(app)
+                .delete('/api/comments/99999')
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("The id provided does not exist!")
+                })
 
-});
+        })
+        test('ERROR DELETE:/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
+            return request(app)
+                .delete('/api/comments/Monster_energy')
+                .expect(400)
+                .then(({ body }) => {
+                    const { message } = body
+                    expect(message).toBe("Bad request :(")
+                })
+
+        })
+    })
+})   
