@@ -1,5 +1,5 @@
 const { findTopics, fetchArticleId, fetchArticles,
-    fetchCommentsByArtId, checkIfArticleExist, postAComment } = require('./models')
+    fetchCommentsByArtId, checkIfArticleExist, postAComment, votes } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -67,4 +67,16 @@ const postCommentById = function (req, res, next){
 
 }
 
-module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId , postCommentById}
+const patchArticleById = function (req, res, next){
+    const {article_id} = req.params
+    const {inc_votes}= req.body
+    return votes(article_id, inc_votes).then((({rows})=>{
+        const article = rows[0]
+        res.status(201).send({article})
+    }))
+   
+
+
+}
+
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId , postCommentById, patchArticleById}

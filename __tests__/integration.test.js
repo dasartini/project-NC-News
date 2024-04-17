@@ -102,7 +102,7 @@ describe("/api/articles", () => {
 describe("/api/articles/article:id",()=>{
     test("GET:/api/articles/article:id returns the specified article", () => {
     return request(app)
-        .get('/api/articles/6')
+        .get('/api/articles/3')
         .expect(200)
         .then(({ body }) => {
             const { article } = body
@@ -120,6 +120,53 @@ describe("/api/articles/article:id",()=>{
         })
 
     });
+
+    test("PATCH: /api/articles/:article_id updates an article by its id.",()=>{
+        return request(app)
+        .patch("/api/articles/6")
+        .send({inc_votes : 5})
+        .expect(201)
+        .then(({body})=>{
+            const {article} = body
+            expect(article).toEqual({
+                
+                    article_id: 6,
+                    title: 'A',
+                    topic: 'mitch',
+                    author: 'icellusedkars',
+                    body: 'Delicious tin of cat food',
+                    created_at: '2020-10-18T01:00:00.000Z',
+                    votes: 5,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                  
+            })
+        })
+
+
+    })
+    test("PATCH: /api/articles/:article_id updates an article by its id (negative numbers).",()=>{
+        return request(app)
+        .patch("/api/articles/3")
+        .send({inc_votes : -99})
+        .expect(201)
+        .then(({body})=>{
+            const {article} = body
+            expect(article).toEqual( {
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                body: 'some gifs',
+                created_at: '2020-11-03T09:12:00.000Z',
+                votes: -99,
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+              })
+        })
+
+
+    })
+
+
 
     test("GET: Returns an error message when provided a valid but non-existing article id", () => {
     return request(app)
