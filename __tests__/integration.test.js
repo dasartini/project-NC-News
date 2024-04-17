@@ -140,6 +140,27 @@ describe("/api/articles/article:id", () => {
                 })
             })
     });
+
+    test("PATCH: /api/articles/:article_id updates an article by its id.", () => {
+        return request(app)
+            .patch("/api/articles/1")
+            .send({ inc_votes: -99 })
+            .expect(201)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toEqual({
+                    article_id: 1,
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                })
+            })
+    });
+
     test("PATCH: /api/articles/:article_id updates an article by its id (negative numbers).", () => {
         return request(app)
             .patch("/api/articles/3")
