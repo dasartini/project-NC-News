@@ -97,10 +97,10 @@ describe("/api/articles", () => {
             });
     });
 
-
 });
 
-test("GET:/api/articles/article:id returns the specified article", () => {
+describe("/api/articles/article:id",()=>{
+    test("GET:/api/articles/article:id returns the specified article", () => {
     return request(app)
         .get('/api/articles/6')
         .expect(200)
@@ -119,9 +119,9 @@ test("GET:/api/articles/article:id returns the specified article", () => {
                 })
         })
 
-});
+    });
 
-test("GET: Returns an error message when provided a valid but non-existing article id", () => {
+    test("GET: Returns an error message when provided a valid but non-existing article id", () => {
     return request(app)
         .get('/api/articles/papa_pear')
         .expect(400)
@@ -129,10 +129,10 @@ test("GET: Returns an error message when provided a valid but non-existing artic
             const { message } = body;
             expect(message).toBe("Bad request :(")
         })
-});
+    });
 
 
-test("GET: Returns an error message when provided an higher id number", () => {
+    test("GET: Returns an error message when provided an higher id number", () => {
     return request(app)
         .get('/api/articles/99999999')
         .expect(404)
@@ -140,8 +140,8 @@ test("GET: Returns an error message when provided an higher id number", () => {
             const { message } = body;
             expect(message).toBe("The id provided does not exist!")
         })
-});
-
+    });
+})
 
 describe('/api/articles/:article_id/comments', () => {
     test("GET: /api/articles/:article_id/comments returns all the comments for an especified article", () => {
