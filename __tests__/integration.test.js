@@ -51,7 +51,7 @@ describe("/api/topics", () => {
             });
     });
 
-});9
+}); 9
 
 describe('/api', () => {
     test("GET:/api Responds with an object describing all the aviable endpoints in this API", () => {
@@ -99,47 +99,130 @@ describe("/api/articles", () => {
 
 });
 
-describe("/api/articles/article:id",()=>{
+describe("/api/articles/article:id", () => {
     test("GET:/api/articles/article:id returns the specified article", () => {
-    return request(app)
-        .get('/api/articles/6')
-        .expect(200)
-        .then(({ body }) => {
-            const { article } = body
-            expect(article).toMatchObject(
-                {
-                    article_id: expect.any(Number),
-                    title: expect.any(String),
-                    topic: expect.any(String),
-                    author: expect.any(String),
-                    body: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: expect.any(Number),
-                    article_img_url: expect.any(String),
-                })
-        })
+        return request(app)
+            .get('/api/articles/3')
+            .expect(200)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toMatchObject(
+                    {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                    })
+            })
 
     });
 
+    test("PATCH: /api/articles/:article_id updates an article by its id.", () => {
+        return request(app)
+            .patch("/api/articles/6")
+            .send({ inc_votes: 5 })
+            .expect(201)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toEqual({
+                    article_id: 6,
+                    title: 'A',
+                    topic: 'mitch',
+                    author: 'icellusedkars',
+                    body: 'Delicious tin of cat food',
+                    created_at: '2020-10-18T01:00:00.000Z',
+                    votes: 5,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                })
+            })
+    });
+
+    test("PATCH: /api/articles/:article_id updates an article by its id.", () => {
+        return request(app)
+            .patch("/api/articles/1")
+            .send({ inc_votes: -99 })
+            .expect(201)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toEqual({
+                    article_id: 1,
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                })
+            })
+    });
+
+    test("PATCH: /api/articles/:article_id updates an article by its id (negative numbers).", () => {
+        return request(app)
+            .patch("/api/articles/3")
+            .send({ inc_votes: -99 })
+            .expect(201)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toEqual({
+                    article_id: 3,
+                    title: 'Eight pug gifs that remind me of mitch',
+                    topic: 'mitch',
+                    author: 'icellusedkars',
+                    body: 'some gifs',
+                    created_at: '2020-11-03T09:12:00.000Z',
+                    votes: -99,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                })
+            })
+
+
+    });
+
+    test("PATCH: Returns an error message when provided a valid but non-existing article id", () => {
+        return request(app)
+            .patch('/api/articles/RobinsAndDays')
+            .expect(400)
+            .then(({ body }) => {
+                const { message } = body;
+                expect(message).toBe("Bad request :(")
+            })
+    });
+    test("PATCH: Returns an error message when provided an higher id number", () => {
+        return request(app)
+            .patch('/api/articles/600')
+            .expect(404)
+            .then(({ body }) => {
+                const { message } = body;
+                expect(message).toBe("The id provided does not exist!")
+            })
+    });
+
+
+
     test("GET: Returns an error message when provided a valid but non-existing article id", () => {
-    return request(app)
-        .get('/api/articles/papa_pear')
-        .expect(400)
-        .then(({ body }) => {
-            const { message } = body;
-            expect(message).toBe("Bad request :(")
-        })
+        return request(app)
+            .get('/api/articles/papa_pear')
+            .expect(400)
+            .then(({ body }) => {
+                const { message } = body;
+                expect(message).toBe("Bad request :(")
+            })
     });
 
 
     test("GET: Returns an error message when provided an higher id number", () => {
-    return request(app)
-        .get('/api/articles/99999999')
-        .expect(404)
-        .then(({ body }) => {
-            const { message } = body;
-            expect(message).toBe("The id provided does not exist!")
-        })
+        return request(app)
+            .get('/api/articles/99999999')
+            .expect(404)
+            .then(({ body }) => {
+                const { message } = body;
+                expect(message).toBe("The id provided does not exist!")
+            })
     });
 })
 
@@ -194,11 +277,11 @@ describe('/api/articles/:article_id/comments', () => {
     })
     test("POST:/api/articles/200/comments Returns a 404 error if passed a non existing Id", () => {
         return request(app)
-        .post('/api/articles/200/comments')
-        .send({
-            username: "rogersop",
-            body: "I love Poland"
-        })
+            .post('/api/articles/200/comments')
+            .send({
+                username: "rogersop",
+                body: "I love Poland"
+            })
             .expect(404)
             .then(({ body }) => {
                 const { message } = body
@@ -208,11 +291,11 @@ describe('/api/articles/:article_id/comments', () => {
 
     test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing Id", () => {
         return request(app)
-        .post('/api/articles/2/comments')
-        .send({
-            username: "Dariusz",
-            body: "I love Poland"
-        })
+            .post('/api/articles/2/comments')
+            .send({
+                username: "Dariusz",
+                body: "I love Poland"
+            })
             .expect(404)
             .then(({ body }) => {
                 const { message } = body
@@ -221,11 +304,11 @@ describe('/api/articles/:article_id/comments', () => {
     })
     test("POST:/api/articles/NotValidEndpoint/comments Returns an empty array when passed an comment id without comments", () => {
         return request(app)
-        .post('/api/articles/GarethBale/comments')
-        .send({
-            username: "rogersop",
-            body: "I love Poland"
-        })
+            .post('/api/articles/GarethBale/comments')
+            .send({
+                username: "rogersop",
+                body: "I love Poland"
+            })
             .expect(400)
             .then(({ body }) => {
                 const { message } = body

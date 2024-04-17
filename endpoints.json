@@ -72,10 +72,10 @@
       }
     ]
   },
-  "POST /api/articles/:article_id/comments":{
-    "description" :"Adds a comment to a valid article Id",
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment to a valid article Id.",
     "queries": [],
-    "exampleResponse" : {
+    "exampleResponse": {
       "comment_id": 19,
       "body": "I love Poland",
       "article_id": 2,
@@ -83,6 +83,19 @@
       "votes": 0,
       "created_at": "2024-04-17T08:50:31.444Z"
     }
-
+  },
+  "PATCH: /api/articles/:article_id": {
+    "description": "Updates an article by its id.",
+    "queries": [],
+    "exampleResponse": {
+      "article_id": 6,
+      "title": "A",
+      "topic": "mitch",
+      "author": "icellusedkars",
+      "body": "Delicious tin of cat food",
+      "created_at": "2020-10-18T01:00:00.000Z",
+      "votes": 5,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
   }
 }
