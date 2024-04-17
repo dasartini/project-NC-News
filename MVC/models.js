@@ -63,19 +63,20 @@ function votes(article_id, inc_votes) {
     return db.query(`UPDATE articles SET votes= votes + $1 WHERE article_id =$2 RETURNING *;`, [inc_votes, article_id])
 }
 
-function deleteComment(comment_id){
-    
-return db.query(`DELETE FROM comments WHERE comment_id =$1 RETURNING *`, [comment_id])
-.then(({rows})=>{if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
-else return rows
-})
+function deleteComment(comment_id) {
+
+    return db.query(`DELETE FROM comments WHERE comment_id =$1 RETURNING *`, [comment_id])
+        .then(({ rows }) => {
+            if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
+            else return rows
+        })
 
 }
 
-function getUsers(){
+function getUsers() {
 
     return db.query(`
-    SELECT * FROM users`).then(({rows})=>{
+    SELECT * FROM users`).then(({ rows }) => {
         return rows
     });
 };

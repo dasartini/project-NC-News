@@ -1,6 +1,6 @@
 const { findTopics, fetchArticleId, fetchArticles,
     fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment,
-getUsers} = require('./models')
+    getUsers } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -85,21 +85,21 @@ const patchArticleById = function (req, res, next) {
 
 }
 
-const deleteCommentById = function (req, res, next){
+const deleteCommentById = function (req, res, next) {
 
-    const {comment_id} = req.params
-    return deleteComment(comment_id).then((article)=>{
-        res.status(204).send({article})
+    const { comment_id } = req.params
+    return deleteComment(comment_id).then((article) => {
+        res.status(204).send({ article })
     })
-    .catch((err)=>{
-        next(err)
-    });
+        .catch((err) => {
+            next(err)
+        });
 };
 
-const getAllUsers = function (req, res, next){
+const getAllUsers = function (req, res, next) {
 
-    return getUsers().then((users)=>{
-        res.status(200).send({users})
+    return getUsers().then((users) => {
+        res.status(200).send({ users })
     });
 
 };
