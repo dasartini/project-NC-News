@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const { getTopics, getApiEndPoints, getArticleById, getAllArticles,
-  getCommentsByArticleId, postCommentById , patchArticleById} = require('./controllers')
+  getCommentsByArticleId, postCommentById, patchArticleById } = require('./controllers')
 
 app.use(express.json())
 
@@ -22,7 +22,7 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
 
-  if (err.code === "23503" && err.constraint === "comments_author_fkey" ) {
+  if (err.code === "23503" && err.constraint === "comments_author_fkey") {
     res.status(404).send({ message: "The username attempting to post does not exist!" })
   }
   if (err.code === "23503") {

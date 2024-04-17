@@ -52,15 +52,15 @@ function checkIfArticleExist(article_id) {
         })
 }
 
-function postAComment(article_id, body){
+function postAComment(article_id, body) {
     return db.query(`
-    INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3) RETURNING *`, [article_id, body.body ,body.username])
-    .then(({rows})=>{return rows})
+    INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3) RETURNING *`, [article_id, body.body, body.username])
+        .then(({ rows }) => { return rows })
 
 }
 
-function votes(article_id, inc_votes){
-    return db.query(`UPDATE articles SET votes=$1 WHERE article_id =$2 RETURNING *;`, [inc_votes , article_id])
+function votes(article_id, inc_votes) {
+    return db.query(`UPDATE articles SET votes=$1 WHERE article_id =$2 RETURNING *;`, [inc_votes, article_id])
 }
 
 module.exports = { findTopics, fetchArticleId, fetchArticles, fetchCommentsByArtId, checkIfArticleExist, postAComment, votes }

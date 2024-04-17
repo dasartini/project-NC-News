@@ -52,31 +52,36 @@ const getCommentsByArticleId = function (req, res, next) {
 
 }
 
-const postCommentById = function (req, res, next){
-   const {article_id} = req.params
-   const {body} = req
-    return postAComment(article_id, body).then((result)=>{
+const postCommentById = function (req, res, next) {
+    const { article_id } = req.params
+    const { body } = req
+    return postAComment(article_id, body).then((result) => {
         const newComment = result[0]
-        res.status(201).send({newComment})
-        
+        res.status(201).send({ newComment })
+
     })
 
-    .catch((err)=>{
-        next(err)
-    })
+        .catch((err) => {
+            next(err)
+        })
 
 }
 
-const patchArticleById = function (req, res, next){
-    const {article_id} = req.params
-    const {inc_votes}= req.body
-    return votes(article_id, inc_votes).then((({rows})=>{
+const patchArticleById = function (req, res, next) {
+    const { article_id } = req.params
+    const { inc_votes } = req.body
+    return votes(article_id, inc_votes).then((({ rows }) => {
+        if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
+
         const article = rows[0]
-        res.status(201).send({article})
+        res.status(201).send({ article })
     }))
-   
+        .catch((err) => {
+            next(err)
+        })
+
 
 
 }
 
-module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId , postCommentById, patchArticleById}
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId, postCommentById, patchArticleById }
