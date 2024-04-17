@@ -11,12 +11,25 @@ app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getAllArticles)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
 app.post('/api/articles/:article_id/comments', postCommentById)
+
+
 app.use((err, req, res, next) => {
   if (err.status && err.message) {
     res.status(err.status).send({ message: err.message });
   }
   else next(err);
 });
+
+app.use((err, req, res, next) => {
+
+  if (err.code === "23503" && err.constraint === "comments_author_fkey" ) {
+    res.status(404).send({ message: "The username attempting to post does not exist!" })
+  }
+  if (err.code === "23503") {
+    res.status(404).send({ message: "The article id attempting to post in does not exist!" })
+  }
+  else next(err)
+})
 
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {

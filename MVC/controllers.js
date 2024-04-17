@@ -55,10 +55,16 @@ const getCommentsByArticleId = function (req, res, next) {
 const postCommentById = function (req, res, next){
    const {article_id} = req.params
    const {body} = req
+   console.log(body.username)
     return postAComment(article_id, body).then((result)=>{
         const newComment = result[0]
         res.status(201).send({newComment})
         
+    })
+
+    .catch((err)=>{
+        console.log(err)
+        next(err)
     })
 
 }
