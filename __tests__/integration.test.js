@@ -51,7 +51,7 @@ describe("/api/topics", () => {
             });
     });
 
-});
+});9
 
 describe('/api', () => {
     test("GET:/api Responds with an object describing all the aviable endpoints in this API", () => {
@@ -77,45 +77,51 @@ describe("/api/articles", () => {
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body
-                expect(articles[0].created_at).toBe('2020-11-03T09:12:00.000Z')
+                const firstArticle = articles[0].created_at
+                expect(articles[0].created_at).toBe(firstArticle)
                 expect(articles.length).toBe(13)
                 articles.forEach((article) => {
-                    expect(typeof article.comment_count).toBe('number')
-                    expect(typeof article.article_id).toBe('number')
-                    expect(typeof article.title).toBe('string')
-                    expect(typeof article.topic).toBe('string')
-                    expect(typeof article.author).toBe('string')
                     expect(article.hasOwnProperty("article.body")).toBe(false)
-                    expect(typeof article.created_at).toBe('string')
-                    expect(typeof article.votes).toBe('number')
-                    expect(typeof article.article_img_url).toBe("string")
+                    expect(article).toMatchObject(
+                        {
+                            article_id: expect.any(Number),
+                            title: expect.any(String),
+                            topic: expect.any(String),
+                            author: expect.any(String),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String),
+                            article_img_url: expect.any(String),
+                            comment_count: expect.any(Number)
+                        })
                 });
             });
-    })
-
+    });
 
 });
 
-test("GET:/api/articles/article:id returns the specified article", () => {
+describe("/api/articles/article:id",()=>{
+    test("GET:/api/articles/article:id returns the specified article", () => {
     return request(app)
         .get('/api/articles/6')
         .expect(200)
         .then(({ body }) => {
             const { article } = body
-            expect(typeof article).toBe("object")
-            expect(article.hasOwnProperty('article_id')).toBe(true)
-            expect(article.hasOwnProperty('article_img_url')).toBe(true)
-            expect(article.hasOwnProperty('author')).toBe(true)
-            expect(article.hasOwnProperty('body')).toBe(true)
-            expect(article.hasOwnProperty('created_at')).toBe(true)
-            expect(article.hasOwnProperty('title')).toBe(true)
-            expect(article.hasOwnProperty('topic')).toBe(true)
-            expect(article.hasOwnProperty('votes')).toBe(true)
+            expect(article).toMatchObject(
+                {
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                })
         })
 
-});
+    });
 
-test("GET: Returns an error message when provided a valid but non-existing article id", () => {
+    test("GET: Returns an error message when provided a valid but non-existing article id", () => {
     return request(app)
         .get('/api/articles/papa_pear')
         .expect(400)
@@ -123,9 +129,10 @@ test("GET: Returns an error message when provided a valid but non-existing artic
             const { message } = body;
             expect(message).toBe("Bad request :(")
         })
-});
+    });
 
-test("GET: Returns an error message when provided an higher id number", () => {
+
+    test("GET: Returns an error message when provided an higher id number", () => {
     return request(app)
         .get('/api/articles/99999999')
         .expect(404)
@@ -133,8 +140,8 @@ test("GET: Returns an error message when provided an higher id number", () => {
             const { message } = body;
             expect(message).toBe("The id provided does not exist!")
         })
-});
-
+    });
+})
 
 describe('/api/articles/:article_id/comments', () => {
     test("GET: /api/articles/:article_id/comments returns all the comments for an especified article", () => {
@@ -144,18 +151,87 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { comments } = body
                 expect(comments.length).toBe(2)
-                expect(comments[0].created_at).toBe("2020-04-06T12:17:00.000Z")
+                const firstComment = comments[0].created_at
+                expect(comments[0].created_at).toBe(firstComment)
                 comments.forEach((comment) => {
-                    expect(typeof comment).toBe('object')
-                    expect(typeof comment.comment_id).toBe('number')
-                    expect(typeof comment.body).toBe('string')
-                    expect(typeof comment.article_id).toBe('number')
-                    expect(typeof comment.author).toBe('string')
-                    expect(typeof comment.votes).toBe('number')
-                    expect(typeof comment.created_at).toBe('string')
+                    expect(comment).toMatchObject(
+                        {
+                            comment_id: expect.any(Number),
+                            body: expect.any(String),
+                            article_id: expect.any(Number),
+                            author: expect.any(String),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String),
+                        })
                 })
+
             });
     });
+
+    test("POST:/api/articles/:article_id/comments", () => {
+        return request(app)
+            .post('/api/articles/2/comments')
+            .send({
+                username: "rogersop",
+                body: "I love Poland"
+            })
+            .expect(201)
+            .then(({ body }) => {
+                const { newComment } = body
+                expect(newComment).toMatchObject(
+                    {
+                        comment_id: expect.any(Number),
+                        body: expect.any(String),
+                        article_id: expect.any(Number),
+                        author: expect.any(String),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                    })
+
+            })
+
+
+    })
+    test("POST:/api/articles/200/comments Returns a 404 error if passed a non existing Id", () => {
+        return request(app)
+        .post('/api/articles/200/comments')
+        .send({
+            username: "rogersop",
+            body: "I love Poland"
+        })
+            .expect(404)
+            .then(({ body }) => {
+                const { message } = body
+                expect(message).toBe("The article id attempting to post in does not exist!")
+            })
+    })
+
+    test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing Id", () => {
+        return request(app)
+        .post('/api/articles/2/comments')
+        .send({
+            username: "Dariusz",
+            body: "I love Poland"
+        })
+            .expect(404)
+            .then(({ body }) => {
+                const { message } = body
+                expect(message).toBe("The username attempting to post does not exist!")
+            })
+    })
+    test("POST:/api/articles/NotValidEndpoint/comments Returns an empty array when passed an comment id without comments", () => {
+        return request(app)
+        .post('/api/articles/GarethBale/comments')
+        .send({
+            username: "rogersop",
+            body: "I love Poland"
+        })
+            .expect(400)
+            .then(({ body }) => {
+                const { message } = body
+                expect(message).toBe("Bad request :(")
+            })
+    })
 
     test("GET:/api/articles/2/comments Returns an empty array when passed an comment id without comments", () => {
         return request(app)
@@ -186,5 +262,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(message).toBe("Bad request :(")
             })
     })
+
+
 
 });

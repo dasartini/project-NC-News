@@ -38,13 +38,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "Take any existing article Id number and returns it with is own characteristics and values",
-    "queries": [
-      "author",
-      "topic",
-      "sort_by",
-      "order",
-      "comment_count"
-    ],
+    "queries": [],
     "exampleResponse": {
       "article_id": 9,
       "title": "They're not exactly dogs, are they?",
@@ -56,30 +50,39 @@
       "comment_count": 2
     }
   },
-  "GET /api/articles/:article_id/comments":{
-    "description":"Takes an existing article Id number and returns its comments if existing, if not returns an empty array",
-    "queries":[  "author",
-    "topic",
-    "sort_by",
-    "order"],
-  "exampleResponse":[
-    {
-      "comment_id": 1,
-      "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-      "article_id": 9,
-      "author": "butter_bridge",
-      "votes": 16,
-      "created_at": "2020-04-06T12:17:00.000Z"
-    },
-    {
-      "comment_id": 17,
-      "body": "The owls are not what they seem.",
-      "article_id": 9,
-      "author": "icellusedkars",
-      "votes": 20,
-      "created_at": "2020-03-14T17:02:00.000Z"
+  "GET /api/articles/:article_id/comments": {
+    "description": "Takes an existing article Id number and returns its comments if existing, if not returns an empty array",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "comment_id": 1,
+        "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "article_id": 9,
+        "author": "butter_bridge",
+        "votes": 16,
+        "created_at": "2020-04-06T12:17:00.000Z"
+      },
+      {
+        "comment_id": 17,
+        "body": "The owls are not what they seem.",
+        "article_id": 9,
+        "author": "icellusedkars",
+        "votes": 20,
+        "created_at": "2020-03-14T17:02:00.000Z"
+      }
+    ]
+  },
+  "POST /api/articles/:article_id/comments":{
+    "description" :"Adds a comment to a valid article Id",
+    "queries": [],
+    "exampleResponse" : {
+      "comment_id": 19,
+      "body": "I love Poland",
+      "article_id": 2,
+      "author": "rogersop",
+      "votes": 0,
+      "created_at": "2024-04-17T08:50:31.444Z"
     }
-  ]
+
   }
-  
 }
