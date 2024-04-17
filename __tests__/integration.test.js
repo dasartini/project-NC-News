@@ -374,7 +374,6 @@ describe('/api/articles/:article_id/comments', () => {
                 .expect(200)
                 .then(({body})=>{
                     const {users} = body
-                    console.log(users)
                     expect(typeof users).toBe("object")
                     expect(users.length).toBe(4)
                     users.forEach((user)=>{
