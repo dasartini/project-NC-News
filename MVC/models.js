@@ -70,5 +70,13 @@ return db.query(`DELETE FROM comments WHERE comment_id =$1 RETURNING *`, [commen
 
 }
 
-module.exports = { findTopics, fetchArticleId, fetchArticles, fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment }
+function getUsers(){
+
+    return db.query(`
+    SELECT * FROM users`).then(({rows})=>{
+        return rows
+    });
+};
+
+module.exports = { findTopics, fetchArticleId, fetchArticles, fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment, getUsers }
 

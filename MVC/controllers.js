@@ -1,5 +1,6 @@
 const { findTopics, fetchArticleId, fetchArticles,
-    fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment } = require('./models')
+    fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment,
+getUsers} = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -87,14 +88,21 @@ const patchArticleById = function (req, res, next) {
 const deleteCommentById = function (req, res, next){
 
     const {comment_id} = req.params
-    console.log(comment_id)
     return deleteComment(comment_id).then(({rows})=>{
         if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
         res.send(204)
     })
     .catch((err)=>{
         next(err)
-    })
-}
+    });
+};
 
-module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId, postCommentById, patchArticleById, deleteCommentById }
+const getAllUsers = function (req, res, next){
+
+    return getUsers().then((users)=>{
+        res.status(200).send({users})
+    });
+
+};
+
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId, postCommentById, patchArticleById, deleteCommentById, getAllUsers }
