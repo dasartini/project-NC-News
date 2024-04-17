@@ -88,9 +88,8 @@ const patchArticleById = function (req, res, next) {
 const deleteCommentById = function (req, res, next){
 
     const {comment_id} = req.params
-    return deleteComment(comment_id).then(({rows})=>{
-        if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
-        res.send(204)
+    return deleteComment(comment_id).then((article)=>{
+        res.status(204).send({article})
     })
     .catch((err)=>{
         next(err)
