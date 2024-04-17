@@ -63,5 +63,12 @@ function votes(article_id, inc_votes) {
     return db.query(`UPDATE articles SET votes= votes + $1 WHERE article_id =$2 RETURNING *;`, [inc_votes, article_id])
 }
 
-module.exports = { findTopics, fetchArticleId, fetchArticles, fetchCommentsByArtId, checkIfArticleExist, postAComment, votes }
+function deleteComment(comment_id){
+    
+return db.query(`DELETE FROM comments WHERE comment_id =$1 RETURNING *`, [comment_id])
+
+
+}
+
+module.exports = { findTopics, fetchArticleId, fetchArticles, fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment }
 
