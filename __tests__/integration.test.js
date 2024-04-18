@@ -282,7 +282,7 @@ describe("/api/articles/article:id", () => {
 });
 
 describe("/api/articles/article:id extra query", () => {
-    test.only("GET:/api/articles/article:id returns the specified article and adds the comment count", () => {
+    test("GET:/api/articles/article:id returns the specified article and adds the comment count", () => {
         return request(app)
             .get('/api/articles/3')
             .expect(200)
