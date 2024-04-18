@@ -9,7 +9,7 @@ beforeEach(() => { return seed(testData) });
 afterAll(() => db.end());
 
 describe("General not found error", () => {
-    test('GET ERROR: returns 404 error if there is an invalid point entered.', () => {
+    test('GET (ERROR): returns 404 error if there is an invalid point entered.', () => {
         return request(app)
             .get("/notAnyValidEndpoint")
             .expect(404)
@@ -42,7 +42,7 @@ describe("/api/topics", () => {
             });
 
     });
-    test('ERROR: returns 404 error if there is an invalid point entered.', () => {
+    test('GET (ERROR): returns 404 error if there is an invalid point entered.', () => {
         return request(app)
             .get("/api/tApics")
             .expect(404)
@@ -238,7 +238,7 @@ describe("/api/articles/article:id", () => {
             });
     });
 
-    test("PATCH: Returns an error message when provided a valid but non-existing article id", () => {
+    test("PATCH (ERROR): Returns an error message when provided a valid but non-existing article id", () => {
         return request(app)
             .patch('/api/articles/RobinsAndDays')
             .expect(400)
@@ -247,7 +247,7 @@ describe("/api/articles/article:id", () => {
                 expect(message).toBe("Bad request :(")
             });
     });
-    test("PATCH: Returns an error message when provided an higher id number", () => {
+    test("PATCH (ERROR): Returns an error message when provided an higher id number", () => {
         return request(app)
             .patch('/api/articles/600')
             .expect(404)
@@ -259,7 +259,7 @@ describe("/api/articles/article:id", () => {
 
 
 
-    test("GET: Returns an error message when provided a valid but non-existing article id", () => {
+    test("GET (ERROR): Returns an error message when provided a valid but non-existing article id", () => {
         return request(app)
             .get('/api/articles/papa_pear')
             .expect(400)
@@ -270,7 +270,7 @@ describe("/api/articles/article:id", () => {
     });
 
 
-    test("GET: Returns an error message when provided an higher id number", () => {
+    test("GET (ERROR): Returns an error message when provided an higher id number", () => {
         return request(app)
             .get('/api/articles/99999999')
             .expect(404)
@@ -351,7 +351,7 @@ describe('/api/articles/:article_id/comments', () => {
                     });
             });
     });
-    test("POST:/api/articles/200/comments Returns a 404 error if passed a non existing Id", () => {
+    test("POST (ERROR):/api/articles/200/comments Returns a 404 error if passed a non existing Id", () => {
         return request(app)
             .post('/api/articles/200/comments')
             .send({
@@ -365,7 +365,7 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 
-    test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing username", () => {
+    test("POST (ERROR):/api/articles/2/comments Returns a 404 error if passed a non existing username", () => {
         return request(app)
             .post('/api/articles/2/comments')
             .send({
@@ -378,7 +378,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(message).toBe("The username attempting to post does not exist!")
             });
     });
-    test("POST:/api/articles/NotValidEndpoint/comments Returns an error message when passed a comment using an invalid article ID", () => {
+    test("POST (ERROR):/api/articles/NotValidEndpoint/comments Returns an error message when passed a comment using an invalid article ID", () => {
         return request(app)
             .post('/api/articles/GarethBale/comments')
             .send({
@@ -402,7 +402,7 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 
-    test("GET:/api/articles/99999999/comments Returns an error when passed an unexisting comment id ", () => {
+    test("GET (ERROR):/api/articles/99999999/comments Returns an error when passed an unexisting comment id ", () => {
         return request(app)
             .get('/api/articles/99999999/comments')
             .expect(404)
@@ -412,7 +412,7 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 
-    test("GET:/api/articles/ThisIsABadRequest/comments Returns an error when passed a non valid comment id ", () => {
+    test("GET (ERROR):/api/articles/ThisIsABadRequest/comments Returns an error when passed a non valid comment id ", () => {
         return request(app)
             .get('/api/articles/mushy_peas/comments')
             .expect(400)
@@ -429,7 +429,7 @@ describe('/api/comments/:comment_id', () => {
                 .delete('/api/comments/5')
                 .expect(204)
         });
-    test('ERROR DELETE:/api/comments/99999 Returns an error when passed an invalid ID.', () => {
+    test('DELETE (ERROR):/api/comments/99999 Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/99999')
                 .expect(404)
@@ -439,7 +439,7 @@ describe('/api/comments/:comment_id', () => {
                 });
 
         });
-    test('ERROR DELETE:/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
+    test('DELETE (ERROR):/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/Monster_energy')
                 .expect(400)
@@ -469,7 +469,7 @@ describe('/api/users', () => {
                     });
                 });
         });
-     test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint', () => {
+     test('GET (ERROR):/api/asers Returns an error when passed an invalid enpoint', () => {
         return request(app)
                 .get("/api/asers")
                 .expect(404)
