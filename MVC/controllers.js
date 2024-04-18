@@ -28,10 +28,9 @@ const getArticleById = function (req, res, next) {
 };
 
 const getAllArticles = function (req, res, next) {
-    return fetchArticles().then((articles) => {
-        articles.forEach((article) => {
-            delete article.body
-        })
+    const { topic } = req.query
+    console.log(topic)
+    return fetchArticles(topic).then((articles) => {
         res.status(200).send({ articles })
 
     })

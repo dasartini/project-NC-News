@@ -2,7 +2,8 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 const request = require("supertest");
-const app = require('../MVC/app')
+const app = require('../MVC/app');
+const { sort } = require('../db/data/test-data/articles');
 
 beforeEach(() => { return seed(testData) });
 afterAll(() => db.end());
@@ -95,7 +96,19 @@ describe("/api/articles", () => {
                 });
             });
     });
+    test("GET: /api/articles?topic=mitch, Returns all the articles sorted by Mitch topic", () => {
+        return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles.length).toBe(12)
+               articles.forEach((article) => {
+                    expect(article.topic).toBe("mitch")
+                });
 
+            });
+    });
 });
 
 describe("/api/articles/article:id", () => {
@@ -366,17 +379,17 @@ describe('/api/articles/:article_id/comments', () => {
         });
     });
 
-    describe('/api/users',()=>{
+    describe('/api/users', () => {
 
-        test('GET:/api/users Returns an array of objects, each containing all users information.', ()=>{
+        test('GET:/api/users Returns an array of objects, each containing all users information.', () => {
             return request(app)
                 .get("/api/users")
                 .expect(200)
-                .then(({body})=>{
-                    const {users} = body
+                .then(({ body }) => {
+                    const { users } = body
                     expect(typeof users).toBe("object")
                     expect(users.length).toBe(4)
-                    users.forEach((user)=>{
+                    users.forEach((user) => {
                         expect(user).toMatchObject({
                             username: expect.any(String),
                             name: expect.any(String),
@@ -385,14 +398,14 @@ describe('/api/articles/:article_id/comments', () => {
                     });
                 });
         });
-        test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint',()=>{
+        test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint', () => {
             return request(app)
-            .get("/api/asers")
-            .expect(404)
-            .then(({ body }) => {
-                const { message } = body;
-                expect(message).toBe("Error 404! endpoint not found :(")
-            });
+                .get("/api/asers")
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body;
+                    expect(message).toBe("Error 404! endpoint not found :(")
+                });
         })
-    });    
-})   ;
+    });
+});
