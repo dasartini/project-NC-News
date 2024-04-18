@@ -71,7 +71,7 @@ describe('/api', () => {
 });
 
 describe("/api/articles", () => {
-    test.only("GET:/api/articles returns an array containing all the articles", () => {
+    test("GET:/api/articles returns an array containing all the articles", () => {
         return request(app)
             .get('/api/articles')
             .expect(200)
@@ -131,14 +131,29 @@ describe("/api/articles", () => {
                 expect(message).toBe('Bad request :(')
     });
 });
-    test("GET (ERROR): /api/articles?tUpic=cats, Returns an error if the sort is not valid", () => {
+    test("GET: /api/articles?tUpic=cats, Returns all the articles ommiting the bad query", () => {
         return request(app)
         .get('/api/articles?tUpic=cats')
-        .expect(404)
-        .then(({ body }) => {
-            const {message} = body
-            expect(message).toBe('Invalid sort')
-});
+        .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                const firstArticle = articles[0].created_at
+                expect(articles[0].created_at).toBe(firstArticle)
+                expect(articles.length).toBe(13)
+                articles.forEach((article) => {
+                    expect(article.hasOwnProperty("article.body")).toBe(false)
+                    expect(article).toMatchObject(
+                        {
+                            article_id: expect.any(Number),
+                            title: expect.any(String),
+                            topic: expect.any(String),
+                            author: expect.any(String),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String),
+                            article_img_url: expect.any(String),
+                            comment_count: expect.any(Number)
+                        });
+                });
 });
 })
 
@@ -440,3 +455,4 @@ describe('/api/articles/:article_id/comments', () => {
         })
     });
 });
+})

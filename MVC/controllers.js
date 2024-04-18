@@ -1,6 +1,6 @@
 const { findTopics, fetchArticleId, fetchArticles,
     fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment,
-    getUsers } = require('./models')
+    getUsers, checkQuery } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -29,15 +29,14 @@ const getArticleById = function (req, res, next) {
 
 const getAllArticles = function (req, res, next) {
     const { topic } = req.query
-    console.log(topic)
-    return fetchArticles(topic).then((articles) => {
-        console.log(articles)
-        res.status(200).send({ articles })
+    Promise.all([fetchArticles(topic), checkQuery(topic)])
 
-    })
-    .catch((err)=>{
-       next(err)
-    })
+        .then(([articles]) => {
+            res.status(200).send({ articles })
+        })
+        .catch((err) => {
+            next(err)
+        })
 };
 
 const getCommentsByArticleId = function (req, res, next) {
