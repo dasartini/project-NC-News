@@ -19,6 +19,7 @@ const getApiEndPoints = function (req, res, next) {
 const getArticleById = function (req, res, next) {
     const { article_id } = req.params
     return fetchArticleId(article_id).then((article) => {
+        console.log(article)
         res.status(200).send({ article })
 
     })
