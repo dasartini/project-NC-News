@@ -2,7 +2,8 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 const request = require("supertest");
-const app = require('../MVC/app')
+const app = require('../MVC/app');
+const { sort } = require('../db/data/test-data/articles');
 
 beforeEach(() => { return seed(testData) });
 afterAll(() => db.end());
@@ -51,7 +52,7 @@ describe("/api/topics", () => {
             });
     });
 
-}); 9
+});
 
 describe('/api', () => {
     test("GET:/api Responds with an object describing all the aviable endpoints in this API", () => {
@@ -67,7 +68,6 @@ describe('/api', () => {
                 expect(endpoint.hasOwnProperty("GET /api/articles/:article_id")).toBe(true)
             });
     });
-
 });
 
 describe("/api/articles", () => {
@@ -92,12 +92,70 @@ describe("/api/articles", () => {
                             created_at: expect.any(String),
                             article_img_url: expect.any(String),
                             comment_count: expect.any(Number)
-                        })
+                        });
                 });
             });
     });
+    test("GET: /api/articles?topic=mitch, Returns all the articles sorted by Mitch topic", () => {
+        return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles.length).toBe(12)
+               articles.forEach((article) => {
+                    expect(article.topic).toBe("mitch")
+                });
 
+            });
+    });
+    test("GET: /api/articles?topic=cats, Returns all the articles sorted by cats topic", () => {
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles.length).toBe(1)
+               articles.forEach((article) => {
+                    expect(article.topic).toBe("cats")
+                });
+
+            });
+    });
+    test("GET (ERROR): /api/articles?topic=WREXHAMFC, Returns an error if the topic does not exist", () => {
+        return request(app)
+            .get('/api/articles?topic=WREXHAMFC')
+            .expect(400)
+            .then(({ body }) => {
+                const {message} = body
+                expect(message).toBe('Bad request :(')
+    });
 });
+    test("GET: /api/articles?tUpic=cats, Returns all the articles ommiting the bad query", () => {
+        return request(app)
+        .get('/api/articles?tUpic=cats')
+        .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                const firstArticle = articles[0].created_at
+                expect(articles[0].created_at).toBe(firstArticle)
+                expect(articles.length).toBe(13)
+                articles.forEach((article) => {
+                    expect(article.hasOwnProperty("article.body")).toBe(false)
+                    expect(article).toMatchObject(
+                        {
+                            article_id: expect.any(Number),
+                            title: expect.any(String),
+                            topic: expect.any(String),
+                            author: expect.any(String),
+                            votes: expect.any(Number),
+                            created_at: expect.any(String),
+                            article_img_url: expect.any(String),
+                            comment_count: expect.any(Number)
+                        });
+                });
+});
+})
 
 describe("/api/articles/article:id", () => {
     test("GET:/api/articles/article:id returns the specified article", () => {
@@ -116,9 +174,8 @@ describe("/api/articles/article:id", () => {
                         created_at: expect.any(String),
                         votes: expect.any(Number),
                         article_img_url: expect.any(String),
-                    })
-            })
-
+                    });
+            });
     });
 
     test("PATCH: /api/articles/:article_id updates an article by its id.", () => {
@@ -137,8 +194,8 @@ describe("/api/articles/article:id", () => {
                     created_at: '2020-10-18T01:00:00.000Z',
                     votes: 5,
                     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-                })
-            })
+                });
+            });
     });
 
     test("PATCH: /api/articles/:article_id updates an article by its id.", () => {
@@ -157,8 +214,8 @@ describe("/api/articles/article:id", () => {
                     created_at: '2020-07-09T20:11:00.000Z',
                     votes: 1,
                     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-                })
-            })
+                });
+            });
     });
 
     test("PATCH: /api/articles/:article_id updates an article by its id (negative numbers).", () => {
@@ -177,10 +234,8 @@ describe("/api/articles/article:id", () => {
                     created_at: '2020-11-03T09:12:00.000Z',
                     votes: -99,
                     article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
-                })
-            })
-
-
+                });
+            });
     });
 
     test("PATCH: Returns an error message when provided a valid but non-existing article id", () => {
@@ -190,7 +245,7 @@ describe("/api/articles/article:id", () => {
             .then(({ body }) => {
                 const { message } = body;
                 expect(message).toBe("Bad request :(")
-            })
+            });
     });
     test("PATCH: Returns an error message when provided an higher id number", () => {
         return request(app)
@@ -199,7 +254,7 @@ describe("/api/articles/article:id", () => {
             .then(({ body }) => {
                 const { message } = body;
                 expect(message).toBe("The id provided does not exist!")
-            })
+            });
     });
 
 
@@ -211,7 +266,7 @@ describe("/api/articles/article:id", () => {
             .then(({ body }) => {
                 const { message } = body;
                 expect(message).toBe("Bad request :(")
-            })
+            });
     });
 
 
@@ -222,9 +277,9 @@ describe("/api/articles/article:id", () => {
             .then(({ body }) => {
                 const { message } = body;
                 expect(message).toBe("The id provided does not exist!")
-            })
+            });
     });
-})
+});
 
 describe('/api/articles/:article_id/comments', () => {
     test("GET: /api/articles/:article_id/comments returns all the comments for an especified article", () => {
@@ -245,9 +300,8 @@ describe('/api/articles/:article_id/comments', () => {
                             author: expect.any(String),
                             votes: expect.any(Number),
                             created_at: expect.any(String),
-                        })
-                })
-
+                        });
+                });
             });
     });
 
@@ -269,12 +323,9 @@ describe('/api/articles/:article_id/comments', () => {
                         author: expect.any(String),
                         votes: expect.any(Number),
                         created_at: expect.any(String),
-                    })
-
-            })
-
-
-    })
+                    });
+            });
+    });
     test("POST:/api/articles/200/comments Returns a 404 error if passed a non existing Id", () => {
         return request(app)
             .post('/api/articles/200/comments')
@@ -286,8 +337,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { message } = body
                 expect(message).toBe("The article id attempting to post in does not exist!")
-            })
-    })
+            });
+    });
 
     test("POST:/api/articles/2/comments Returns a 404 error if passed a non existing username", () => {
         return request(app)
@@ -300,8 +351,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { message } = body
                 expect(message).toBe("The username attempting to post does not exist!")
-            })
-    })
+            });
+    });
     test("POST:/api/articles/NotValidEndpoint/comments Returns an error message when passed a comment using an invalid article ID", () => {
         return request(app)
             .post('/api/articles/GarethBale/comments')
@@ -313,8 +364,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { message } = body
                 expect(message).toBe("Bad request :(")
-            })
-    })
+            });
+    });
 
     test("GET:/api/articles/2/comments Returns an empty array when passed an comment id without comments", () => {
         return request(app)
@@ -323,8 +374,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { comments } = body
                 expect(comments.length).toBe(0)
-            })
-    })
+            });
+    });
 
     test("GET:/api/articles/99999999/comments Returns an error when passed an unexisting comment id ", () => {
         return request(app)
@@ -333,8 +384,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { message } = body
                 expect(message).toBe("The id provided does not exist!")
-            })
-    })
+            });
+    });
 
     test("GET:/api/articles/ThisIsABadRequest/comments Returns an error when passed a non valid comment id ", () => {
         return request(app)
@@ -343,8 +394,8 @@ describe('/api/articles/:article_id/comments', () => {
             .then(({ body }) => {
                 const { message } = body
                 expect(message).toBe("Bad request :(")
-            })
-    })
+            });
+    });
 
     describe('/api/comments/:comment_id', () => {
 
@@ -352,7 +403,7 @@ describe('/api/articles/:article_id/comments', () => {
             return request(app)
                 .delete('/api/comments/5')
                 .expect(204)
-        })
+        });
         test('ERROR DELETE:/api/comments/99999 Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/99999')
@@ -360,9 +411,9 @@ describe('/api/articles/:article_id/comments', () => {
                 .then(({ body }) => {
                     const { message } = body
                     expect(message).toBe("The id provided does not exist!")
-                })
+                });
 
-        })
+        });
         test('ERROR DELETE:/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/Monster_energy')
@@ -370,8 +421,38 @@ describe('/api/articles/:article_id/comments', () => {
                 .then(({ body }) => {
                     const { message } = body
                     expect(message).toBe("Bad request :(")
-                })
+                });
+        });
+    });
 
+    describe('/api/users', () => {
+
+        test('GET:/api/users Returns an array of objects, each containing all users information.', () => {
+            return request(app)
+                .get("/api/users")
+                .expect(200)
+                .then(({ body }) => {
+                    const { users } = body
+                    expect(typeof users).toBe("object")
+                    expect(users.length).toBe(4)
+                    users.forEach((user) => {
+                        expect(user).toMatchObject({
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        });
+                    });
+                });
+        });
+        test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint', () => {
+            return request(app)
+                .get("/api/asers")
+                .expect(404)
+                .then(({ body }) => {
+                    const { message } = body;
+                    expect(message).toBe("Error 404! endpoint not found :(")
+                });
         })
-    })
-})   
+    });
+});
+})

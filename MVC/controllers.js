@@ -1,5 +1,6 @@
 const { findTopics, fetchArticleId, fetchArticles,
-    fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment } = require('./models')
+    fetchCommentsByArtId, checkIfArticleExist, postAComment, votes, deleteComment,
+    getUsers, checkQuery } = require('./models')
 const endpoint = require('../endpoints.json')
 
 
@@ -27,13 +28,15 @@ const getArticleById = function (req, res, next) {
 };
 
 const getAllArticles = function (req, res, next) {
-    return fetchArticles().then((articles) => {
-        articles.forEach((article) => {
-            delete article.body
-        })
-        res.status(200).send({ articles })
+    const { topic } = req.query
+    Promise.all([fetchArticles(topic), checkQuery(topic)])
 
-    })
+        .then(([articles]) => {
+            res.status(200).send({ articles })
+        })
+        .catch((err) => {
+            next(err)
+        })
 };
 
 const getCommentsByArticleId = function (req, res, next) {
@@ -84,17 +87,23 @@ const patchArticleById = function (req, res, next) {
 
 }
 
-const deleteCommentById = function (req, res, next){
+const deleteCommentById = function (req, res, next) {
 
-    const {comment_id} = req.params
-    console.log(comment_id)
-    return deleteComment(comment_id).then(({rows})=>{
-        if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
-        res.send(204)
+    const { comment_id } = req.params
+    return deleteComment(comment_id).then((article) => {
+        res.status(204).send({ article })
     })
-    .catch((err)=>{
-        next(err)
-    })
-}
+        .catch((err) => {
+            next(err)
+        });
+};
 
-module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId, postCommentById, patchArticleById, deleteCommentById }
+const getAllUsers = function (req, res, next) {
+
+    return getUsers().then((users) => {
+        res.status(200).send({ users })
+    });
+
+};
+
+module.exports = { getTopics, getApiEndPoints, getArticleById, getAllArticles, getCommentsByArticleId, postCommentById, patchArticleById, deleteCommentById, getAllUsers }
