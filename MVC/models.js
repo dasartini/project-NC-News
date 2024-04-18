@@ -23,7 +23,7 @@ function fetchArticleId(article_id) {
 
 function fetchArticles(topic) {
     let sqlQuery = `
-SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
+SELECT articles.*,
 COUNT (comments.article_id)::int
 AS comment_count
 FROM articles LEFT JOIN comments 
