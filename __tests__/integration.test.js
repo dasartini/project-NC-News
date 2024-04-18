@@ -71,7 +71,7 @@ describe('/api', () => {
 });
 
 describe("/api/articles", () => {
-    test("GET:/api/articles returns an array containing all the articles", () => {
+    test.only("GET:/api/articles returns an array containing all the articles", () => {
         return request(app)
             .get('/api/articles')
             .expect(200)
@@ -109,7 +109,38 @@ describe("/api/articles", () => {
 
             });
     });
+    test("GET: /api/articles?topic=cats, Returns all the articles sorted by cats topic", () => {
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                expect(articles.length).toBe(1)
+               articles.forEach((article) => {
+                    expect(article.topic).toBe("cats")
+                });
+
+            });
+    });
+    test("GET (ERROR): /api/articles?topic=WREXHAMFC, Returns an error if the topic does not exist", () => {
+        return request(app)
+            .get('/api/articles?topic=WREXHAMFC')
+            .expect(400)
+            .then(({ body }) => {
+                const {message} = body
+                expect(message).toBe('Bad request :(')
+    });
 });
+    test("GET (ERROR): /api/articles?tUpic=cats, Returns an error if the sort is not valid", () => {
+        return request(app)
+        .get('/api/articles?tUpic=cats')
+        .expect(404)
+        .then(({ body }) => {
+            const {message} = body
+            expect(message).toBe('Invalid sort')
+});
+});
+})
 
 describe("/api/articles/article:id", () => {
     test("GET:/api/articles/article:id returns the specified article", () => {

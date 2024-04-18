@@ -31,8 +31,12 @@ const getAllArticles = function (req, res, next) {
     const { topic } = req.query
     console.log(topic)
     return fetchArticles(topic).then((articles) => {
+        console.log(articles)
         res.status(200).send({ articles })
 
+    })
+    .catch((err)=>{
+       next(err)
     })
 };
 

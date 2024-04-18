@@ -18,6 +18,8 @@ SELECT * FROM articles WHERE article_id = $1;`, [article_id])
 }
 
 function fetchArticles(topic) {
+
+//if(topic === undefined){return Promise.reject({ status: 404, message: "Invalid sort" })  }
 let sqlQuery = `
 SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
 COUNT (comments.article_id)::int
@@ -37,10 +39,16 @@ if(topic){
 sqlQuery += query2
 
 return db.query(sqlQuery, queryValues).then(({rows})=>{
-    console.log(rows)
-    return rows
-})
+  //  console.log(rows)
+    if (rows.length === 0) { return Promise.reject({ status: 400, message: "Bad request :(" }) }
 
+  return rows
+})
+};
+
+function checkQuery(topic){
+
+}
 //     return db.query(`
 //     SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
 //     COUNT (comments.article_id)::int
@@ -58,7 +66,7 @@ return db.query(sqlQuery, queryValues).then(({rows})=>{
 //             console.log({rows})
 //             return rows
 //         })
-}
+
 
 function fetchCommentsByArtId(article_id) {
     return db.query(`
