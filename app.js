@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const { getTopics, getApiEndPoints, getArticleById, getAllArticles,
   getCommentsByArticleId, postCommentById, patchArticleById,
-  deleteCommentById, getAllUsers } = require('./controllers')
+  deleteCommentById, getAllUsers } = require('./MVC/controllers')
 
 app.use(express.json())
 

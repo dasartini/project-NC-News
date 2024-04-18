@@ -2,7 +2,7 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 const request = require("supertest");
-const app = require('../MVC/app');
+const app = require('../app');
 const { sort } = require('../db/data/test-data/articles');
 
 beforeEach(() => { return seed(testData) });
