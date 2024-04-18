@@ -281,6 +281,31 @@ describe("/api/articles/article:id", () => {
     });
 });
 
+describe("/api/articles/article:id extra query", () => {
+    test.only("GET:/api/articles/article:id returns the specified article and adds the comment count", () => {
+        return request(app)
+            .get('/api/articles/3')
+            .expect(200)
+            .then(({ body }) => {
+                const { article } = body
+                expect(article).toMatchObject(
+                    {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number),
+                    });
+            });
+    });
+});
+
+
+
 describe('/api/articles/:article_id/comments', () => {
     test("GET: /api/articles/:article_id/comments returns all the comments for an especified article", () => {
         return request(app)
@@ -397,14 +422,14 @@ describe('/api/articles/:article_id/comments', () => {
             });
     });
 
-    describe('/api/comments/:comment_id', () => {
+describe('/api/comments/:comment_id', () => {
 
-        test('DELETE:/api/comments/:comment_id Deletes the given comment by ID.', () => {
+    test('DELETE:/api/comments/:comment_id Deletes the given comment by ID.', () => {
             return request(app)
                 .delete('/api/comments/5')
                 .expect(204)
         });
-        test('ERROR DELETE:/api/comments/99999 Returns an error when passed an invalid ID.', () => {
+    test('ERROR DELETE:/api/comments/99999 Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/99999')
                 .expect(404)
@@ -414,7 +439,7 @@ describe('/api/articles/:article_id/comments', () => {
                 });
 
         });
-        test('ERROR DELETE:/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
+    test('ERROR DELETE:/api/comments/NotAnId Returns an error when passed an invalid ID.', () => {
             return request(app)
                 .delete('/api/comments/Monster_energy')
                 .expect(400)
@@ -425,10 +450,10 @@ describe('/api/articles/:article_id/comments', () => {
         });
     });
 
-    describe('/api/users', () => {
+describe('/api/users', () => {
 
-        test('GET:/api/users Returns an array of objects, each containing all users information.', () => {
-            return request(app)
+     test('GET:/api/users Returns an array of objects, each containing all users information.', () => {
+        return request(app)
                 .get("/api/users")
                 .expect(200)
                 .then(({ body }) => {
@@ -444,8 +469,8 @@ describe('/api/articles/:article_id/comments', () => {
                     });
                 });
         });
-        test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint', () => {
-            return request(app)
+     test('ERROR: GET:/api/asers Returns an error when passed an invalid enpoint', () => {
+        return request(app)
                 .get("/api/asers")
                 .expect(404)
                 .then(({ body }) => {
