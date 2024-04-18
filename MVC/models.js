@@ -16,7 +16,6 @@ function fetchArticleId(article_id) {
     GROUP BY articles.article_id`, [article_id])
         .then(({ rows }) => {
             if (rows.length === 0) { return Promise.reject({ status: 404, message: "The id provided does not exist!" }) }
-            console.log(rows)
             return rows[0]
         })
 }
