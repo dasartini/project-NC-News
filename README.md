@@ -15,6 +15,14 @@ NOTE: this project was developed using Node.j v23.6.2 and PostgreSQL 14.11 there
 
 To run this project in your internet navigator I will invite you to open this link:
 
-----> https://project-nc-news-adrian-sartini.onrender.com
+----> https://project-nc-news-adrian-sartini.onrender.com/api
+
+NOTE 2:It might take one minte to completely load due to the free version of server that spins down the free instance due inactivity.
+
+You can navigate between the different methods I implemented in the app.js
+Just type the endpoint at the end of the link 
+example:  https://project-nc-news-adrian-sartini.onrender.com/api/articles/6
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
