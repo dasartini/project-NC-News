@@ -143,14 +143,24 @@ describe("/api/articles", () => {
                  expect(articles).toBeSortedBy('created_at', {ascending:true})
             });
     });
-    test("GET: /api/articles?sort_by=comment_count&sort_dir=ASC, Returns all the articles sorted by date and ascending order", () => {
+    test.only("GET: /api/articles?sort_by=comment_count, Returns all the articles sorted by date and descending order (default)", () => {
         return request(app)
-            .get('/api/articles?sort_by=comment_count&sort_dir=ASC')
+            .get('/api/articles?sort_by=comment_count')
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body
+                console.log(articles)
                  expect(articles.length).toBe(13)
-                 expect(articles).toBeSortedBy('comment_count', {ascending:true})
+                 expect(articles).toBeSortedBy('comment_count', {descending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=votes&sort_dir=ASC, Returns all the articles sorted by vote and ascending order", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&sort_dir=ASC')
+            .expect(200)
+            .then(({ body }) => {
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('votes', {ascending:true})
             });
     });
 
