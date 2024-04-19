@@ -34,6 +34,7 @@ const getAllArticles = function (req, res, next) {
 
         .then(([articles]) => {
             articles.forEach((article)=>{
+                
                 delete article.body
             })
             res.status(200).send({ articles })

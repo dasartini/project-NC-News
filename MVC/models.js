@@ -20,7 +20,17 @@ function fetchArticleId(article_id) {
         })
 }
 
-function fetchArticles(topic, sort_by= "created_at", sort_dir = "DESC") {
+function fetchArticles(topic, sort_by = "created_at", sort_dir = "DESC") {
+    const validSort = ['votes', topic, "created_at", "comment_count",]
+    const validSortDir = ['ASC', 'DESC']
+
+    if (!validSort.includes(sort_by)) {
+        return Promise.reject({ status: 400, message: 'Invalid query value' })
+    }
+
+    if (!validSortDir.includes(sort_dir)) {
+        return Promise.reject({ status: 400, message: 'Invalid query value' })
+    }
 
 
     let sqlQuery = `

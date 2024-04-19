@@ -149,7 +149,6 @@ describe("/api/articles", () => {
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body
-                console.log(articles)
                  expect(articles.length).toBe(13)
                  expect(articles).toBeSortedBy('comment_count', {descending:true})
             });
@@ -172,6 +171,53 @@ describe("/api/articles", () => {
             .then(({ body }) => {
                 const {message} = body
                 expect(message).toBe('Bad request :(')
+    });
+    
+});
+
+    test("GET (ERROR): /api/articles?sort_by=WREXHAMFC&sort_dir=ASC, Returns an error if the topic does not exist", () => {
+        return request(app)
+            .get('/api/articles?sort_by=WREXHAMFC&sort_dir=ASC')
+            .expect(400)
+             .then(({ body }) => {
+            const {message} = body
+            expect(message).toBe('Invalid query value')
+    });
+});
+
+    test("GET (ERROR): /api/articles?sort_by=votes&WARSZEWO, Returns the articles sorted by the valid query ignoring the undefined second query parameter", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&WARSZEWO')
+            .expect(200)
+             .then(({ body }) => {
+            const {articles} = body
+            expect(articles).toBeSortedBy('votes', {descending:true})
+            expect(articles.length).toBe(13)
+            articles.forEach((article) => {
+                expect(article.hasOwnProperty("article.body")).toBe(false)
+                expect(article).toMatchObject(
+                    {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number)
+                    });
+            });
+
+
+    });
+});
+       test("GET (ERROR): /api/articles?sort_by=votes&sort_dir=WARSZEWO, Returns an error if the sort query is not valid", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&sort_dir=WARSZEWO')
+            .expect(400)
+             .then(({ body }) => {
+            const {message} = body
+            expect(message).toBe('Invalid query value')
     });
 });
     test("GET: /api/articles?tUpic=cats, Returns all the articles ommiting the bad query", () => {
