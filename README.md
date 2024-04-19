@@ -3,8 +3,8 @@
 
 To correctly connect to the provided database and run this project, it is required to create two separate files. Follow the instructions below:
 
-1-In the root folder create a file named ".env.developement" connecting the PGDATABASE to the develpoment database in setup.sql .
-2-In the root folder create a file named ".env.test" connecting the PGDATABASE to the test database in setup.sql .
+1-In the root folder create a file named ".env.developement" connecting the PGDATABASE to the develpoment database in setup.sql located in the database "db" folder.
+2-In the root folder create a file named ".env.test" connecting the PGDATABASE to the test database in setup.sql located in the database "db" folder.
 3- npm install dependencies.
 4- run npm setup.
 5 -run npm seed.
@@ -20,7 +20,7 @@ To run this project in your internet navigator I will invite you to open this li
 NOTE 2:It might take one minte to completely load due to the free version of server that spins down the free instance due inactivity.
 
 You can navigate between the different methods I implemented in the app.js
-Just type the endpoint at the end of the link 
+Just type the endpoint at the end of the link, you can find all the endpoints in the endpoints.json file in the root folder.
 example:  https://project-nc-news-adrian-sartini.onrender.com/api/articles/6
 
 
