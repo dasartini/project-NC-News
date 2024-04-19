@@ -20,7 +20,9 @@ function fetchArticleId(article_id) {
         })
 }
 
-function fetchArticles(topic) {
+function fetchArticles(topic, sort_by= "created_at", sort_dir = "DESC") {
+
+
     let sqlQuery = `
 SELECT articles.*,
 COUNT (comments.article_id)::int
@@ -29,8 +31,7 @@ FROM articles LEFT JOIN comments
 ON articles.article_id = comments.article_id`
 
     let query2 = ` GROUP BY articles.article_id
- ORDER BY articles.created_at DESC`
-
+ ORDER BY ${sort_by} ${sort_dir}`
     const queryValues = []
 
     if (topic) {

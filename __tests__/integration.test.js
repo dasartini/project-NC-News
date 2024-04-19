@@ -79,6 +79,7 @@ describe("/api/articles", () => {
                 const { articles } = body
                 const firstArticle = articles[0].created_at
                 expect(articles[0].created_at).toBe(firstArticle)
+                expect(articles).toBeSortedBy('created_at', {descending:true})
                 expect(articles.length).toBe(13)
                 articles.forEach((article) => {
                     expect(article.hasOwnProperty("article.body")).toBe(false)
@@ -122,6 +123,37 @@ describe("/api/articles", () => {
 
             });
     });
+    test("GET: /api/articles?sort_by=created_at&sort_dir=DESC, Returns all the articles sorted by date and descending order by default", () => {
+        return request(app)
+            .get('/api/articles?sort_by=created_at&sort_dir=DESC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('created_at', {descending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=created_at&sort_dir=ASC, Returns all the articles sorted by date and ascending order", () => {
+        return request(app)
+            .get('/api/articles?sort_by=created_at&sort_dir=ASC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('created_at', {ascending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=comment_count&sort_dir=ASC, Returns all the articles sorted by date and ascending order", () => {
+        return request(app)
+            .get('/api/articles?sort_by=comment_count&sort_dir=ASC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('comment_count', {ascending:true})
+            });
+    });
+
     test("GET (ERROR): /api/articles?topic=WREXHAMFC, Returns an error if the topic does not exist", () => {
         return request(app)
             .get('/api/articles?topic=WREXHAMFC')
@@ -155,7 +187,9 @@ describe("/api/articles", () => {
                         });
                 });
 });
+
 })
+
 
 describe("/api/articles/article:id", () => {
     test("GET:/api/articles/article:id returns the specified article", () => {
@@ -316,6 +350,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comments.length).toBe(2)
                 const firstComment = comments[0].created_at
                 expect(comments[0].created_at).toBe(firstComment)
+                expect(comments).toBeSortedBy('created_at', {descending:true})
                 comments.forEach((comment) => {
                     expect(comment).toMatchObject(
                         {
