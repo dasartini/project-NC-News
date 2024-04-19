@@ -143,7 +143,7 @@ describe("/api/articles", () => {
                  expect(articles).toBeSortedBy('created_at', {ascending:true})
             });
     });
-    test.only("GET: /api/articles?sort_by=comment_count, Returns all the articles sorted by date and descending order (default)", () => {
+    test("GET: /api/articles?sort_by=comment_count, Returns all the articles sorted by date and descending order (default)", () => {
         return request(app)
             .get('/api/articles?sort_by=comment_count')
             .expect(200)
@@ -159,6 +159,7 @@ describe("/api/articles", () => {
             .get('/api/articles?sort_by=votes&sort_dir=ASC')
             .expect(200)
             .then(({ body }) => {
+                const { articles } = body
                  expect(articles.length).toBe(13)
                  expect(articles).toBeSortedBy('votes', {ascending:true})
             });
