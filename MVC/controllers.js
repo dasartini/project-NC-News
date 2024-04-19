@@ -28,10 +28,15 @@ const getArticleById = function (req, res, next) {
 };
 
 const getAllArticles = function (req, res, next) {
-    const { topic } = req.query
-    Promise.all([fetchArticles(topic), checkQuery(topic)])
+    const { topic, sort_by, sort_dir } = req.query
+    Promise.all([fetchArticles(topic, sort_by, sort_dir), checkQuery(topic)])
+    
 
         .then(([articles]) => {
+            articles.forEach((article)=>{
+                
+                delete article.body
+            })
             res.status(200).send({ articles })
         })
         .catch((err) => {
