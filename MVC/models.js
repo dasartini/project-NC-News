@@ -20,7 +20,19 @@ function fetchArticleId(article_id) {
         })
 }
 
-function fetchArticles(topic) {
+function fetchArticles(topic, sort_by = "created_at", sort_dir = "DESC") {
+    const validSort = ['votes', topic, "created_at", "comment_count",]
+    const validSortDir = ['ASC', 'DESC']
+
+    if (!validSort.includes(sort_by)) {
+        return Promise.reject({ status: 400, message: 'Invalid query value' })
+    }
+
+    if (!validSortDir.includes(sort_dir)) {
+        return Promise.reject({ status: 400, message: 'Invalid query value' })
+    }
+
+
     let sqlQuery = `
 SELECT articles.*,
 COUNT (comments.article_id)::int
@@ -29,8 +41,7 @@ FROM articles LEFT JOIN comments
 ON articles.article_id = comments.article_id`
 
     let query2 = ` GROUP BY articles.article_id
- ORDER BY articles.created_at DESC`
-
+ ORDER BY ${sort_by} ${sort_dir}`
     const queryValues = []
 
     if (topic) {

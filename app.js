@@ -1,10 +1,12 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const { getTopics, getApiEndPoints, getArticleById, getAllArticles,
   getCommentsByArticleId, postCommentById, patchArticleById,
   deleteCommentById, getAllUsers } = require('./MVC/controllers')
 
 app.use(express.json())
+app.use(cors())
 
 app.get('/api/topics', getTopics)
 app.get('/api', getApiEndPoints)

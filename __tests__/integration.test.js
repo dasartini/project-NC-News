@@ -79,6 +79,7 @@ describe("/api/articles", () => {
                 const { articles } = body
                 const firstArticle = articles[0].created_at
                 expect(articles[0].created_at).toBe(firstArticle)
+                expect(articles).toBeSortedBy('created_at', {descending:true})
                 expect(articles.length).toBe(13)
                 articles.forEach((article) => {
                     expect(article.hasOwnProperty("article.body")).toBe(false)
@@ -122,6 +123,47 @@ describe("/api/articles", () => {
 
             });
     });
+    test("GET: /api/articles?sort_by=created_at&sort_dir=DESC, Returns all the articles sorted by date and descending order by default", () => {
+        return request(app)
+            .get('/api/articles?sort_by=created_at&sort_dir=DESC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('created_at', {descending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=created_at&sort_dir=ASC, Returns all the articles sorted by date and ascending order", () => {
+        return request(app)
+            .get('/api/articles?sort_by=created_at&sort_dir=ASC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('created_at', {ascending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=comment_count, Returns all the articles sorted by date and descending order (default)", () => {
+        return request(app)
+            .get('/api/articles?sort_by=comment_count')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('comment_count', {descending:true})
+            });
+    });
+    test("GET: /api/articles?sort_by=votes&sort_dir=ASC, Returns all the articles sorted by vote and ascending order", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&sort_dir=ASC')
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body
+                 expect(articles.length).toBe(13)
+                 expect(articles).toBeSortedBy('votes', {ascending:true})
+            });
+    });
+
     test("GET (ERROR): /api/articles?topic=WREXHAMFC, Returns an error if the topic does not exist", () => {
         return request(app)
             .get('/api/articles?topic=WREXHAMFC')
@@ -129,6 +171,53 @@ describe("/api/articles", () => {
             .then(({ body }) => {
                 const {message} = body
                 expect(message).toBe('Bad request :(')
+    });
+    
+});
+
+    test("GET (ERROR): /api/articles?sort_by=WREXHAMFC&sort_dir=ASC, Returns an error if the topic does not exist", () => {
+        return request(app)
+            .get('/api/articles?sort_by=WREXHAMFC&sort_dir=ASC')
+            .expect(400)
+             .then(({ body }) => {
+            const {message} = body
+            expect(message).toBe('Invalid query value')
+    });
+});
+
+    test("GET (ERROR): /api/articles?sort_by=votes&WARSZEWO, Returns the articles sorted by the valid query ignoring the undefined second query parameter", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&WARSZEWO')
+            .expect(200)
+             .then(({ body }) => {
+            const {articles} = body
+            expect(articles).toBeSortedBy('votes', {descending:true})
+            expect(articles.length).toBe(13)
+            articles.forEach((article) => {
+                expect(article.hasOwnProperty("article.body")).toBe(false)
+                expect(article).toMatchObject(
+                    {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number)
+                    });
+            });
+
+
+    });
+});
+       test("GET (ERROR): /api/articles?sort_by=votes&sort_dir=WARSZEWO, Returns an error if the sort query is not valid", () => {
+        return request(app)
+            .get('/api/articles?sort_by=votes&sort_dir=WARSZEWO')
+            .expect(400)
+             .then(({ body }) => {
+            const {message} = body
+            expect(message).toBe('Invalid query value')
     });
 });
     test("GET: /api/articles?tUpic=cats, Returns all the articles ommiting the bad query", () => {
@@ -155,7 +244,9 @@ describe("/api/articles", () => {
                         });
                 });
 });
+
 })
+
 
 describe("/api/articles/article:id", () => {
     test("GET:/api/articles/article:id returns the specified article", () => {
@@ -316,6 +407,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(comments.length).toBe(2)
                 const firstComment = comments[0].created_at
                 expect(comments[0].created_at).toBe(firstComment)
+                expect(comments).toBeSortedBy('created_at', {descending:true})
                 comments.forEach((comment) => {
                     expect(comment).toMatchObject(
                         {
