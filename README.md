@@ -3,7 +3,7 @@
 
 ## Minimun versions:
 -Node.js v23.6.2
-asdasda
+
 -PostgreSQL 14.11
 
 ## Instalation 
