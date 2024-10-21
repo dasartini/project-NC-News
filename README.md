@@ -1,5 +1,5 @@
 # WELCOME TO The Northcoders Times API
- I am glad that you are reading this. my first project ever made, its a basic backend-based api that can work in any internet navigator, consisting in different http requests that send different responses from an API.
+ I am glad that you are reading this. my first project ever made, it's a basic backend-based api that can work in any internet navigator, consisting in building an API that interacts with a PostgreSQL database using node postgress. The API has different http requests that went sent gets different responses or an error.
 
 INSTRUCTIONS
  
