@@ -1,14 +1,18 @@
 # WELCOME TO The Northcoders Times API
- I am glad that you are reading this. my first project ever made, it's a basic backend-based api that can work in any internet navigator, consisting in building an API that interacts with a PostgreSQL database using node postgress. The API has different http requests that went sent gets different responses or an error.
+My first project ever made, it's a REST API created using technologies such as JavaScript with Express framework and PSQL as a database.
 
-## Minimun versions:
+The API has different HTTP requests (GET, POST, DELETE, PATCH) to access to data using any program.
+
+## Minimum versions:
 -Node.js v23.6.2
 
 -PostgreSQL 14.11
 
-## Instalation 
+## Installation 
  
-To correctly connect to the provided database and run this project, it is required to create two separate files. Follow the instructions below:
+To correctly connect to the provided database and run this project, it is required to create two separate files.
+
+Follow the instructions below:
 
 1. Clone the repository:
    ```bash
@@ -50,23 +54,23 @@ To correctly connect to the provided database and run this project, it is requir
    This will run the test suite and provide all the results.
 
 
-NOTE: this project was developed using Node.j v23.6.2 and PostgreSQL 14.11 therefore this would be a minimun but might not a must requirement.
+NOTE 1: This project was developed using Node.j v23.6.2 and PostgreSQL 14.11 therefore this would be a minimum but is not a requirement.
 
 
 ## LINK 
 
-To run this project in your internet navigator I will invite you to open this link:
+To run this project in your browser I invite you to open this link:
 
 ----> https://project-nc-news-adrian-sartini.onrender.com/api
 
-NOTE 2:It might take one minute to completely load due to the free version of server that spins down the free instance due inactivity.
+NOTE 2: It might take one minute to completely load due to the free service where the project is hosted.
 
-You can navigate between the different methods I implemented in the app.js
+You can navigate between the different methods I implemented in the app.js file.
 
 Just type the endpoint at the end of the link, you can find all the endpoints in the endpoints.json file in the root folder.
 
-example:  https://project-nc-news-adrian-sartini.onrender.com/api/articles/6
+## Example: 
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+```bash
+https://project-nc-news-adrian-sartini.onrender.com/api/articles/6
+```
