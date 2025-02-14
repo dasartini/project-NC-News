@@ -1,6 +1,8 @@
+
 const express = require('express')
 const cors = require('cors')
 const app = express()
+
 const { getTopics, getApiEndPoints, getArticleById, getAllArticles,
   getCommentsByArticleId, postCommentById, patchArticleById,
   deleteCommentById, getAllUsers } = require('./MVC/controllers')
